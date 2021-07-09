@@ -20,6 +20,13 @@
             "DigitalCreative\\FakeableDataTransferObject\\Tests\\": "tests"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DigitalCreative\\FakeableDataTransferObject\\FakeableServiceProvider"
+            ]
+        }
+    },
     "config": {
         "sort-packages": true
     },
