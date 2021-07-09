@@ -1,5 +1,5 @@
 {
-    "name": "digital-creative/fakeable-dto",
+    "name": "digital-creative/fakeable-data-transfer-object",
     "type": "library",
     "license": "MIT",
     "require": {
