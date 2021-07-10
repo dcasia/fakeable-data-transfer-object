@@ -18,10 +18,6 @@ trait Fakeable
             $args = $args[ 0 ];
         }
 
-        /**
-         * @var FakerRegistrar $registrar
-         */
-        $registrar = resolve(FakerRegistrar::class);
         $reflection = new ReflectionClass(static::class);
         $properties = [];
 
@@ -38,7 +34,7 @@ trait Fakeable
                 throw new RuntimeException('Cannot fake union type');
             } else if ($type instanceof ReflectionNamedType) {
                 $class = $type->getName();
-                $value = $registrar->faker($class)(class: $class, value: $value);
+                $value = FakerRegistrar::faker($class)(class: $class, value: $value);
             } else {
                 $value ??= false;
             }

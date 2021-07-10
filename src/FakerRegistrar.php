@@ -6,23 +6,21 @@ use RuntimeException;
 
 class FakerRegistrar
 {
-    protected array $fakers = [];
+    protected static array $fakers = [];
 
-    public function register(string $abstract, callable $faker): self
+    public static function register(string $abstract, callable $faker): void
     {
-        $this->fakers[ $abstract ] = $faker;
-
-        return $this;
+        static::$fakers[$abstract] = $faker;
     }
 
-    public function faker(string $abstract): callable
+    public static function faker(string $abstract): callable
     {
         $original = $abstract;
-        $faker = $this->fakers[ $abstract ] ?? null;
+        $faker = static::$fakers[$abstract] ?? null;
 
         if (blank($faker)) {
             foreach (class_implements($abstract) as $interface) {
-                if (($faker = $this->fakers[ $interface ] ?? null)) {
+                if (($faker = static::$fakers[$interface] ?? null)) {
                     break;
                 }
             }
@@ -30,7 +28,7 @@ class FakerRegistrar
 
         if (blank($faker)) {
             while ($abstract = get_parent_class($abstract)) {
-                if (($faker = $this->fakers[ $abstract ] ?? null)) {
+                if (($faker = static::$fakers[$abstract] ?? null)) {
                     break;
                 }
             }
@@ -39,10 +37,8 @@ class FakerRegistrar
         return $faker ?? fn(...$args) => throw new RuntimeException("Cannot fake '$original'");
     }
 
-    public function flush(): self
+    public static function flush(): void
     {
-        $this->fakers = [];
-
-        return $this;
+        static::$fakers = [];
     }
 }
