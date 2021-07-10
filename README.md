@@ -4,6 +4,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/digital-creative/fakeable-data-transfer-object)](https://packagist.org/packages/digital-creative/fakeable-data-transfer-object)
 [![License](https://img.shields.io/packagist/l/digital-creative/fakeable-data-transfer-object)](https://github.com/dcasia/fakeable-data-transfer-object/blob/master/LICENSE)
 
+This package extends the https://github.com/spatie/data-transfer-object by only including a new static method `::fake()`, therefore expects no difference from the original package.
+
 # Installation
 
 You can install the package via composer:
