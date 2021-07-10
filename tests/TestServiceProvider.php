@@ -13,11 +13,11 @@ class TestServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        resolve(FakerRegistrar::class)->register(Enum::class, function($class, $value = null) {
+        FakerRegistrar::register(Enum::class, function ($class, $value = null) {
             return new $class($value);
         });
 
-        resolve(FakerRegistrar::class)->register(File::class, function($class, $value = null) {
+        FakerRegistrar::register(File::class, function ($class, $value = null) {
             return new $class;
         });
     }

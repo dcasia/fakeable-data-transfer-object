@@ -14,13 +14,6 @@ use ReflectionUnionType;
 
 class FakeableServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        $this->app->singleton(FakerRegistrar::class, function () {
-            return new FakerRegistrar();
-        });
-    }
-
     public function boot(): void
     {
         $this->registerBuiltinFakers();
@@ -31,10 +24,6 @@ class FakeableServiceProvider extends ServiceProvider
 
     protected function registerBuiltinFakers(): void
     {
-        /**
-         * @var FakerRegistrar $registrar
-         */
-        $registrar = resolve(FakerRegistrar::class);
         $faker = $this->app->make(Generator::class);
 
         $callbacks = [
@@ -46,17 +35,13 @@ class FakeableServiceProvider extends ServiceProvider
         ];
 
         foreach ($callbacks as $type => $callback) {
-            $registrar->register($type, $callback);
+            FakerRegistrar::register($type, $callback);
         }
     }
 
     protected function registerCarbonFaker(): void
     {
-        /**
-         * @var FakerRegistrar $registrar
-         */
-        $registrar = resolve(FakerRegistrar::class);
-        $registrar->register(CarbonInterface::class, function (string $class, $value = null) {
+        FakerRegistrar::register(CarbonInterface::class, function (string $class, $value = null) {
             if (blank($value)) {
                 return now();
             }
@@ -70,11 +55,7 @@ class FakeableServiceProvider extends ServiceProvider
 
     protected function registerDataTransferObjectFaker(): void
     {
-        /**
-         * @var FakerRegistrar $registrar
-         */
-        $registrar = resolve(FakerRegistrar::class);
-        $registrar->register(DataTransferObject::class, function (string $class, $value = null) {
+        FakerRegistrar::register(DataTransferObject::class, function (string $class, $value = null) {
             if ($value instanceof DataTransferObject) {
                 $value = $value->toArray();
             }
@@ -88,11 +69,7 @@ class FakeableServiceProvider extends ServiceProvider
 
     protected function registerCollectionFaker(): void
     {
-        /**
-         * @var FakerRegistrar $registrar
-         */
-        $registrar = resolve(FakerRegistrar::class);
-        $registrar->register(Collection::class, function (string $class, $value = null) use ($registrar) {
+        FakerRegistrar::register(Collection::class, function (string $class, $value = null) {
             /**
              * @var Collection $class
              */
@@ -109,9 +86,9 @@ class FakeableServiceProvider extends ServiceProvider
                 $types = [ $returnType ];
             }
 
-            return collect($value ?? [ [] ])->map(function ($value) use ($types, $registrar) {
+            return collect($value ?? [ [] ])->map(function ($value) use ($types) {
                 $class = Arr::random($types)->getName();
-                $value = $registrar->faker($class)(class: $class, value: $value);
+                $value = FakerRegistrar::faker($class)(class: $class, value: $value);
 
                 if ($value instanceof DataTransferObject) {
                     $value = $value->toArray();
