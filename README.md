@@ -62,17 +62,13 @@ class AppServiceProvider extends ServiceProvider
 {
     public function boot(): void
     {
-        /**
-         * @var FakerRegistrar $registrar
-         */
-        $registrar = resolve(FakerRegistrar::class);
-      
-        $registrar->register(Enum::class, function (string $class, mixed $value = null) {
+        FakerRegistrar::register(Enum::class, function (string $class, mixed $value = null) {
             return blank($value) ? $class::getRandomInstance() : $class::fromValue($value);
         });
         
-        $registrar->register(UploadedFile::class, function (string $class, mixed $value = null) {
-            return blank($value) ? UploadedFile::fake()->create('file.png') : $value;
+        FakerRegistrar::register(UploadedFile::class, function (string $class, mixed $value = null) {
+            /** @var UploadedFile $class */
+            return blank($value) ? $class::fake()->create('file.png') : $value;
         });
 
     }
