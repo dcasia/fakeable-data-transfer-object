@@ -21,6 +21,7 @@ use DigitalCreative\FakeableDataTransferObject\Tests\Objects\NoType;
 use DigitalCreative\FakeableDataTransferObject\Tests\Objects\Nullable;
 use DigitalCreative\FakeableDataTransferObject\Tests\Objects\SameFaker;
 use DigitalCreative\FakeableDataTransferObject\Tests\Objects\WithCollection;
+use DigitalCreative\FakeableDataTransferObject\Tests\Objects\WithMapFrom;
 use DigitalCreative\FakeableDataTransferObject\Tests\Objects\Zoo;
 use Orchestra\Testbench\TestCase;
 use RuntimeException;
@@ -166,6 +167,19 @@ class FakeableTest extends TestCase
         $dog = $dto->animals->shift();
         $this->assertInstanceOf(Dog::class, $dog);
         $this->assertTrue(is_string($dog->name));
+    }
+
+    public function test_map_from_works(): void
+    {
+        $dto1 = WithMapFrom::fake();
+        $dto2 = WithMapFrom::fake([
+            'user' => [
+                'name' => 'hello',
+            ],
+        ]);
+
+        $this->assertTrue(is_string($dto1->name));
+        $this->assertEquals('hello', $dto2->name);
     }
 
     public function test_exception_will_be_thrown_if_no_faker_was_provided(): void

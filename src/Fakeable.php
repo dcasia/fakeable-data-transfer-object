@@ -9,6 +9,7 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionUnionType;
 use RuntimeException;
+use Spatie\DataTransferObject\Attributes\MapFrom;
 
 trait Fakeable
 {
@@ -26,7 +27,7 @@ trait Fakeable
                 continue;
             }
 
-            $name = $property->getName();
+            $name = static::resolvePropertyName($property);
             $type = $property->getType();
             $value = data_get($args, $name, fn() => $property->getDefaultValue());
 
@@ -43,5 +44,16 @@ trait Fakeable
         }
 
         return new static($properties);
+    }
+
+    private static function resolvePropertyName(ReflectionProperty $property): string
+    {
+        $attributes = $property->getAttributes(MapFrom::class);
+
+        if (empty($attributes)) {
+            return $property->getName();
+        }
+
+        return $attributes[ 0 ]->newInstance()->name;
     }
 }
