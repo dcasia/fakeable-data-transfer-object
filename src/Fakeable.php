@@ -34,8 +34,10 @@ trait Fakeable
             if ($type instanceof ReflectionUnionType) {
                 throw new RuntimeException('Cannot fake union type');
             } else if ($type instanceof ReflectionNamedType) {
-                $class = $type->getName();
-                $value = FakerRegistrar::faker($class)(class: $class, value: $value);
+                if (!$type->allowsNull()) {
+                    $class = $type->getName();
+                    $value = FakerRegistrar::faker($class)(class: $class, value: $value);
+                }
             } else {
                 $value ??= false;
             }

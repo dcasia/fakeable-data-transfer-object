@@ -63,9 +63,11 @@ class FakeableTest extends TestCase
 
     public function test_nullable_works(): void
     {
-        $dto = Nullable::fake();
+        $dto1 = Nullable::fake();
+        $dto2 = Nullable::fake(name: 'hello');
 
-        $this->assertTrue(is_string($dto->name));
+        $this->assertTrue(is_null($dto1->name));
+        $this->assertTrue(is_string($dto2->name));
     }
 
     public function test_nested_dto_works(): void
