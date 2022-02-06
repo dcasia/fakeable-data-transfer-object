@@ -42,14 +42,10 @@ class FakeableServiceProvider extends ServiceProvider
     protected function registerCarbonFaker(): void
     {
         FakerRegistrar::register(CarbonInterface::class, function (string $class, $value = null) {
-            if (blank($value)) {
-                return now();
-            }
-
             /**
              * @var CarbonInterface $class
              */
-            return $class::parse($value);
+            return blank($value) ? $class::now() : $class::parse($value);
         });
     }
 
