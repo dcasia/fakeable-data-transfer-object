@@ -4,6 +4,8 @@
     "license": "MIT",
     "require": {
         "php": "^8.0",
+        "fakerphp/faker": "^1.21",
+        "nesbot/carbon": "^2.64",
         "spatie/data-transfer-object": "^3.3"
     },
     "require-dev": {
